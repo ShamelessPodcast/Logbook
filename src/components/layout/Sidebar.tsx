@@ -3,7 +3,6 @@
 import { cn } from '@/utils/cn'
 import {
   Bell,
-  BookOpen,
   Car,
   Compass,
   Home,
@@ -26,14 +25,14 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { href: '/feed', label: 'Home', icon: Home },
-  { href: '/explore', label: 'Explore', icon: Compass },
-  { href: '/search', label: 'Search', icon: Search },
+  { href: '/feed',          label: 'Home',         icon: Home },
+  { href: '/explore',       label: 'Explore',       icon: Compass },
+  { href: '/search',        label: 'Search',        icon: Search },
   { href: '/notifications', label: 'Notifications', icon: Bell },
-  { href: '/messages', label: 'Messages', icon: Mail },
-  { href: '/groups', label: 'Groups', icon: Users },
-  { href: '/marketplace', label: 'Marketplace', icon: ShoppingBag },
-  { href: '/garage', label: 'My Garage', icon: Car },
+  { href: '/messages',      label: 'Messages',      icon: Mail },
+  { href: '/groups',        label: 'Groups',        icon: Users },
+  { href: '/marketplace',   label: 'Marketplace',   icon: ShoppingBag },
+  { href: '/garage',        label: 'My Garage',     icon: Car },
 ]
 
 interface SidebarProps {
@@ -46,51 +45,71 @@ export function Sidebar({ profile, unreadNotifications = 0, unreadMessages = 0 }
   const pathname = usePathname()
 
   return (
-    <aside className="sticky top-0 flex h-screen w-64 flex-col border-r border-neutral-100 bg-white px-3 py-4">
+    <aside className="sticky top-0 flex h-screen w-64 flex-col border-r border-[--border] bg-white px-3 py-4">
       {/* Logo */}
-      <Link href="/feed" className="mb-6 flex items-center gap-2 px-3 py-2">
-        <BookOpen className="h-6 w-6 text-black" />
-        <span className="text-xl font-bold tracking-tight">Logbook</span>
+      <Link
+        href="/feed"
+        className="mb-4 flex items-center gap-2.5 px-3 py-2 group"
+      >
+        {/* Logbook wordmark — plate-style L */}
+        <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand-600 text-white font-black text-lg leading-none select-none group-hover:bg-brand-700 transition-colors">
+          L
+        </span>
+        <span className="text-[1.25rem] font-black tracking-tight text-[--ink]">
+          Logbook
+        </span>
       </Link>
 
       {/* Nav */}
-      <nav className="flex flex-1 flex-col gap-1">
+      <nav className="flex flex-1 flex-col gap-0.5">
         {navItems.map(({ href, label, icon: Icon }) => {
-          const active = pathname.startsWith(href)
+          const active = pathname === href || pathname.startsWith(href + '/')
           const count =
-            href === '/notifications' ? unreadNotifications : href === '/messages' ? unreadMessages : 0
+            href === '/notifications'
+              ? unreadNotifications
+              : href === '/messages'
+                ? unreadMessages
+                : 0
 
           return (
             <Link
               key={href}
               href={href}
               className={cn(
-                'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors',
-                active
-                  ? 'bg-neutral-100 text-black'
-                  : 'text-neutral-600 hover:bg-neutral-50 hover:text-black'
+                'nav-item',
+                active && 'nav-item--active'
               )}
             >
               <span className="relative">
-                <Icon className="h-5 w-5" />
+                <Icon className={cn('h-[1.375rem] w-[1.375rem]', active ? 'text-brand-600' : 'text-[--ink]')} strokeWidth={active ? 2.5 : 2} />
                 {count > 0 && (
-                  <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-black text-[9px] font-bold text-white">
+                  <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-brand-600 text-[9px] font-bold text-white">
                     {count > 9 ? '9+' : count}
                   </span>
                 )}
               </span>
-              {label}
+              <span className={cn(active ? 'font-bold text-brand-600' : 'text-[--ink]')}>
+                {label}
+              </span>
             </Link>
           )
         })}
       </nav>
 
+      {/* Post button */}
+      <Link
+        href="/feed"
+        className="mx-3 mt-3 mb-4 flex items-center justify-center rounded-full bg-brand-600 py-3 text-sm font-bold text-white hover:bg-brand-700 transition-colors"
+      >
+        Post
+      </Link>
+
       {/* Profile + Settings */}
       {profile && (
-        <div className="mt-4 border-t border-neutral-100 pt-4">
+        <div className="border-t border-[--border] pt-3">
           <Link
             href={`/${profile.moniker}`}
-            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors hover:bg-neutral-50"
+            className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-[--surface-raised]"
           >
             <Avatar
               src={profile.avatar_url}
@@ -98,16 +117,17 @@ export function Sidebar({ profile, unreadNotifications = 0, unreadMessages = 0 }
               size="sm"
             />
             <div className="min-w-0 flex-1">
-              <p className="truncate font-medium text-black">
+              <p className="truncate text-sm font-bold text-[--ink]">
                 {profile.display_name ?? profile.moniker}
               </p>
-              <p className="truncate text-xs text-neutral-500">@{profile.moniker}</p>
+              <p className="truncate text-xs text-[--ink-subtle]">@{profile.moniker}</p>
             </div>
+            <Settings className="h-4 w-4 shrink-0 text-[--ink-muted]" />
           </Link>
-          <div className="mt-1 flex gap-1">
+          <div className="mt-1 flex gap-1 px-1">
             <Link
               href="/settings/profile"
-              className="flex flex-1 items-center gap-2 rounded-xl px-3 py-2 text-sm text-neutral-600 transition-colors hover:bg-neutral-50 hover:text-black"
+              className="flex flex-1 items-center gap-2 rounded-full px-3 py-2 text-sm text-[--ink-subtle] transition-colors hover:bg-[--surface-raised] hover:text-[--ink]"
             >
               <Settings className="h-4 w-4" />
               Settings
@@ -115,7 +135,7 @@ export function Sidebar({ profile, unreadNotifications = 0, unreadMessages = 0 }
             <form action={signOut}>
               <button
                 type="submit"
-                className="rounded-xl px-3 py-2 text-sm text-neutral-500 hover:bg-neutral-50 hover:text-black"
+                className="rounded-full px-3 py-2 text-sm text-[--ink-subtle] hover:bg-[--surface-raised] hover:text-[--ink] transition-colors"
               >
                 Log out
               </button>

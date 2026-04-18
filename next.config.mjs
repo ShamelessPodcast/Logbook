@@ -9,13 +9,11 @@ const nextConfig = {
       },
     ],
   },
-  // TypeScript errors from Supabase inference are resolved after `supabase gen types`
-  // Disable for initial build; re-enable after types are generated.
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   async headers() {
     return [

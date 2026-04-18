@@ -3,15 +3,16 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { forwardRef } from 'react'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 rounded-full text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 rounded-full text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        primary: 'bg-black text-white hover:bg-neutral-800',
-        secondary: 'border border-neutral-200 bg-white text-black hover:bg-neutral-50',
-        ghost: 'bg-transparent text-neutral-700 hover:bg-neutral-100',
+        primary:     'bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800',
+        secondary:   'border border-[--border-strong] bg-white text-[--ink] hover:bg-[--surface-raised]',
+        ghost:       'bg-transparent text-[--ink-subtle] hover:bg-[--surface-raised] hover:text-[--ink]',
         destructive: 'bg-red-600 text-white hover:bg-red-700',
-        outline: 'border border-neutral-300 bg-transparent text-black hover:bg-neutral-50',
+        outline:     'border border-[--border-strong] bg-transparent text-[--ink] hover:bg-[--surface-raised]',
+        brand:       'border border-brand-600 text-brand-600 bg-transparent hover:bg-brand-50',
       },
       size: {
         sm: 'h-8 px-3 text-xs',

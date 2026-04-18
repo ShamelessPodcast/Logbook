@@ -4,7 +4,27 @@
 
 @layer base {
   :root {
-    --font-inter: 'Inter', system-ui, sans-serif;
+    /* Brand */
+    --brand:         #D4520A;
+    --brand-hover:   #A83D06;
+    --brand-light:   #FFF4EE;
+    --brand-muted:   #FFE5D0;
+
+    /* Text */
+    --ink:           #0F0F0F;
+    --ink-subtle:    #536471;
+    --ink-muted:     #8B98A5;
+    --ink-faint:     #CFD9DE;
+
+    /* Surface */
+    --surface:       #FFFFFF;
+    --surface-raised:#F7F9F9;
+    --border:        #EFF3F4;
+    --border-strong: #CFD9DE;
+
+    /* UK plate */
+    --plate-yellow:  #F5C518;
+    --plate-border:  #1A1A1A;
   }
 
   * {
@@ -14,48 +34,103 @@
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body {
-    font-family: var(--font-inter);
-    color: #0a0a0a;
-    background: #ffffff;
+    font-family: var(--font-inter), system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--surface);
+    font-size: 15px;
+    line-height: 1.5;
   }
 
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+  /* Selection colour */
+  ::selection {
+    background: #FFE5D0;
+    color: #D4520A;
   }
 
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
+  /* Scrollbar — thin, subtle (matches X) */
+  ::-webkit-scrollbar       { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
-    background: #d4d4d4;
-    border-radius: 3px;
+    background: var(--border-strong);
+    border-radius: 2px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--ink-muted); }
+}
+
+@layer components {
+  /* ─── Feed ─────────────────────────────────────────────────────────── */
+  .feed-item {
+    @apply border-b border-[--border] transition-colors duration-100 hover:bg-[--surface-raised];
   }
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: #a3a3a3;
+  /* ─── Post action button (reply / repost / like / share) ─────────── */
+  .post-action {
+    @apply flex items-center gap-1.5 text-[--ink-subtle] transition-colors duration-100
+           hover:text-[--brand] cursor-pointer select-none text-sm;
+  }
+  .post-action svg {
+    @apply transition-colors duration-100;
+  }
+  .post-action:hover svg {
+    @apply text-[--brand];
+  }
+  .post-action--liked {
+    @apply text-[--brand];
+  }
+  .post-action--reposted {
+    @apply text-emerald-600;
+  }
+
+  /* ─── Nav item (sidebar) ────────────────────────────────────────────── */
+  .nav-item {
+    @apply flex items-center gap-3 rounded-full px-3 py-2.5 text-[1.0625rem] font-medium
+           text-[--ink] transition-colors duration-100 hover:bg-[--surface-raised] w-full;
+  }
+  .nav-item--active {
+    @apply font-bold text-[--brand];
+  }
+  .nav-item--active svg {
+    @apply text-[--brand];
+  }
+
+  /* ─── Tab (mobile) ──────────────────────────────────────────────────── */
+  .tab-item {
+    @apply flex flex-col items-center gap-0.5 text-[--ink-subtle]
+           transition-colors duration-100 p-1;
+  }
+  .tab-item--active {
+    @apply text-[--brand];
+  }
+
+  /* ─── Plate badge (inline in posts / profiles) ──────────────────────── */
+  .plate-inline {
+    @apply inline-flex items-center rounded border-2 border-[--plate-border]
+           bg-[--plate-yellow] px-2 py-0 font-mono text-xs font-bold
+           tracking-widest text-[--plate-border] leading-5;
   }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+  .text-balance   { text-wrap: balance; }
+  .text-brand     { color: var(--brand); }
+  .bg-brand       { background-color: var(--brand); }
+  .border-brand   { border-color: var(--brand); }
 
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
 
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
+  /* Fade-in animation on mount */
+  .animate-fade-in { animation: fadeIn 0.15s ease-out; }
 
-  .feed-item {
-    @apply border-b border-neutral-100 transition-colors hover:bg-neutral-50/50;
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0);   }
   }
 }

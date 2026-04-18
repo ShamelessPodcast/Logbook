@@ -7,12 +7,12 @@ interface BadgeProps {
 }
 
 const variants = {
-  default: 'bg-neutral-100 text-neutral-700',
-  success: 'bg-green-50 text-green-700',
-  warning: 'bg-amber-50 text-amber-700',
-  danger: 'bg-red-50 text-red-700',
-  info: 'bg-blue-50 text-blue-700',
-  verified: 'bg-black text-white',
+  default:  'bg-[--surface-raised] text-[--ink-subtle]',
+  success:  'bg-green-50 text-green-700',
+  warning:  'bg-amber-50 text-amber-700',
+  danger:   'bg-red-50 text-red-700',
+  info:     'bg-blue-50 text-blue-700',
+  verified: 'bg-brand-600 text-white',    // plate-locked verified
 }
 
 export function Badge({ children, variant = 'default', className }: BadgeProps) {

@@ -57,7 +57,8 @@ export function AddVehicleForm() {
       fuel_type: (dvlaData?.fuelType as string | undefined) ?? null,
       mot_expiry: (dvlaData?.motExpiryDate as string | undefined) ?? null,
       tax_due: (dvlaData?.taxDueDate as string | undefined) ?? null,
-      dvla_data: dvlaData,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      dvla_data: dvlaData as any,
       is_primary: false,
     })
 

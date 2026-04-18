@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import type { RealtimeChannel } from '@supabase/supabase-js'
 
 type RealtimeEvent = 'INSERT' | 'UPDATE' | 'DELETE' | '*'
 
@@ -19,17 +18,11 @@ export function useRealtime({ table, schema = 'public', filter, event = '*', onE
   const supabase = createClient()
 
   useEffect(() => {
-    const channel: RealtimeChannel = supabase
-      .channel(`${table}-${filter ?? 'all'}`)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const channel = (supabase.channel(`${table}-${filter ?? 'all'}`) as any)
       .on(
-        // @ts-expect-error — supabase types are overly strict here
         'postgres_changes',
-        {
-          event,
-          schema,
-          table,
-          ...(filter ? { filter } : {}),
-        },
+        { event, schema, table, ...(filter ? { filter } : {}) },
         onEvent
       )
       .subscribe()

@@ -29,7 +29,7 @@ export async function signUp(formData: FormData): Promise<{ error?: string }> {
 
   const parsed = signUpSchema.safeParse(raw)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
+    return { error: parsed.error.issues[0]?.message ?? 'Invalid input' }
   }
 
   const { email, password, moniker } = parsed.data
@@ -68,7 +68,7 @@ export async function signIn(formData: FormData): Promise<{ error?: string }> {
 
   const parsed = signInSchema.safeParse(raw)
   if (!parsed.success) {
-    return { error: parsed.error.errors[0]?.message ?? 'Invalid input' }
+    return { error: parsed.error.issues[0]?.message ?? 'Invalid input' }
   }
 
   const { email, password } = parsed.data
