@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/synthetic-posts",
+      "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/synthetic-posts",
+      "schedule": "0 13 * * *"
+    },
+    {
+      "path": "/api/cron/synthetic-posts",
+      "schedule": "0 19 * * *"
+    }
+  ]
+}
