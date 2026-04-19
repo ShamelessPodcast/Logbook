@@ -1,5 +1,7 @@
+'use client'
+
 import type { MOTTest } from '@/lib/mot'
-import { cn } from '@/utils/cn'
+import { cn } from '@/lib/utils'
 import { CheckCircle2, XCircle, AlertTriangle, Info, ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 
