@@ -35,7 +35,7 @@ export default function TermsPage() {
         <li>Post false vehicle information or misrepresent ownership</li>
         <li>Scrape, crawl, or otherwise extract data from the platform in bulk</li>
         <li>Distribute spam, malware, or unsolicited commercial messages</li>
-        <li>Attempt to gain unauthorised access to our systems or other users' accounts</li>
+        <li>Attempt to gain unauthorised access to our systems or other users&apos; accounts</li>
         <li>Use the platform for any unlawful purpose</li>
       </ul>
 

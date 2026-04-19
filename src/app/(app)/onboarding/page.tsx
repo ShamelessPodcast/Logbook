@@ -90,7 +90,7 @@ export default function OnboardingPage() {
         engine_size: dvla?.engineCapacity ? String(dvla.engineCapacity) : mot?.engineSize ?? null,
         mot_expiry: dvla?.motExpiryDate ?? null,
         tax_due:    dvla?.taxDueDate ?? null,
-        dvla_data:  (dvla ?? null) as unknown as import('@/types/database').Json,
+        dvla_data:  (dvla ?? null) as unknown as never,
         is_primary: true,
       })
       .select()

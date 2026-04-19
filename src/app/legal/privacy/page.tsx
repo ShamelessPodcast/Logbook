@@ -60,7 +60,7 @@ export default function PrivacyPage() {
       <ul className="space-y-2 text-gray-600 list-disc pl-6">
         <li>Access the personal data we hold about you</li>
         <li>Correct inaccurate data</li>
-        <li>Request deletion of your data ("right to be forgotten")</li>
+        <li>Request deletion of your data (&ldquo;right to be forgotten&rdquo;)</li>
         <li>Restrict or object to processing</li>
         <li>Data portability</li>
         <li>Withdraw consent at any time</li>
