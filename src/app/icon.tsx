@@ -8,36 +8,28 @@ export default function Icon() {
     (
       <div
         style={{
-          background: 'white',
-          width: '100%',
-          height: '100%',
+          width: 32,
+          height: 32,
+          background: '#DC2626',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          borderRadius: 4,
         }}
       >
-        {/* L-plate: vertical bar */}
-        <div
+        <span
           style={{
-            position: 'absolute',
-            left: 7,
-            top: 4,
-            width: 7,
-            height: 22,
-            background: '#FF0000',
+            color: 'white',
+            fontSize: 22,
+            fontWeight: 900,
+            fontFamily: 'serif',
+            lineHeight: 1,
+            marginTop: 2,
+            letterSpacing: '-0.02em',
           }}
-        />
-        {/* L-plate: horizontal bar */}
-        <div
-          style={{
-            position: 'absolute',
-            left: 7,
-            top: 21,
-            width: 18,
-            height: 7,
-            background: '#FF0000',
-          }}
-        />
+        >
+          L
+        </span>
       </div>
     ),
     { ...size }
