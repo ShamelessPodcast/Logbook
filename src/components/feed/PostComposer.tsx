@@ -32,16 +32,30 @@ export function PostComposer({
   const fileRef = useRef<HTMLInputElement>(null)
   const supabase = createClient()
 
+  function addFiles(files: File[]) {
+    const allowed = files.filter(f => f.type.startsWith('image/')).slice(0, 4 - images.length)
+    if (!allowed.length) return
+    const previews = allowed.map(f => URL.createObjectURL(f))
+    setImages(prev => [...prev, ...allowed])
+    setImagePreviews(prev => [...prev, ...previews])
+  }
+
+  function handlePaste(e: React.ClipboardEvent<HTMLTextAreaElement>) {
+    const items = Array.from(e.clipboardData.items)
+    const imageItems = items.filter(item => item.type.startsWith('image/'))
+    if (!imageItems.length) return
+    e.preventDefault()
+    const files = imageItems.map(item => item.getAsFile()).filter(Boolean) as File[]
+    addFiles(files)
+  }
+
   const charCount = content.length
   const MAX = 500
   const remaining = MAX - charCount
   const canPost = content.trim().length > 0 && charCount <= MAX
 
   function handleImageSelect(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files ?? []).slice(0, 4 - images.length)
-    const newPreviews = files.map((f) => URL.createObjectURL(f))
-    setImages((prev) => [...prev, ...files])
-    setImagePreviews((prev) => [...prev, ...newPreviews])
+    addFiles(Array.from(e.target.files ?? []))
   }
 
   function removeImage(idx: number) {
@@ -106,6 +120,7 @@ export function PostComposer({
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
+            onPaste={handlePaste}
             placeholder={placeholder}
             rows={3}
             className="w-full resize-none bg-transparent text-[15px] placeholder:text-neutral-400 focus:outline-none"
@@ -160,7 +175,7 @@ export function PostComposer({
                 onClick={() => fileRef.current?.click()}
                 disabled={images.length >= 4}
                 className="rounded-full p-1.5 text-neutral-500 hover:bg-neutral-100 hover:text-black disabled:opacity-40"
-                title="Add image"
+                title="Add image (or paste from clipboard)"
               >
                 <ImagePlus className="h-5 w-5" />
               </button>
