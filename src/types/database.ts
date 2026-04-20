@@ -50,6 +50,144 @@ export type Database = {
           },
         ]
       }
+      bug_reports: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          description: string | null
+          id: string
+          reported_url: string | null
+          reporter_id: string | null
+          status: string
+          steps: string | null
+          title: string
+          user_agent: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          reported_url?: string | null
+          reporter_id?: string | null
+          status?: string
+          steps?: string | null
+          title: string
+          user_agent?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          reported_url?: string | null
+          reporter_id?: string | null
+          status?: string
+          steps?: string | null
+          title?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bug_reports_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      build_logs: {
+        Row: {
+          after_image_urls: string[] | null
+          author_id: string
+          before_image_urls: string[] | null
+          category: string
+          created_at: string
+          description: string | null
+          difficulty: number | null
+          hours_spent: number | null
+          id: string
+          is_deleted: boolean
+          labour_cost_pence: number
+          mileage: number | null
+          parts: Json | null
+          parts_cost_pence: number
+          post_id: string | null
+          title: string
+          total_cost_pence: number | null
+          updated_at: string
+          vehicle_id: string
+          would_recommend: boolean | null
+        }
+        Insert: {
+          after_image_urls?: string[] | null
+          author_id: string
+          before_image_urls?: string[] | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          difficulty?: number | null
+          hours_spent?: number | null
+          id?: string
+          is_deleted?: boolean
+          labour_cost_pence?: number
+          mileage?: number | null
+          parts?: Json | null
+          parts_cost_pence?: number
+          post_id?: string | null
+          title: string
+          total_cost_pence?: number | null
+          updated_at?: string
+          vehicle_id: string
+          would_recommend?: boolean | null
+        }
+        Update: {
+          after_image_urls?: string[] | null
+          author_id?: string
+          before_image_urls?: string[] | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          difficulty?: number | null
+          hours_spent?: number | null
+          id?: string
+          is_deleted?: boolean
+          labour_cost_pence?: number
+          mileage?: number | null
+          parts?: Json | null
+          parts_cost_pence?: number
+          post_id?: string | null
+          title?: string
+          total_cost_pence?: number | null
+          updated_at?: string
+          vehicle_id?: string
+          would_recommend?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "build_logs_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "build_logs_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "build_logs_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conversations: {
         Row: {
           created_at: string
@@ -530,12 +668,14 @@ export type Database = {
       posts: {
         Row: {
           author_id: string
+          build_log_data: Json | null
           content: string
           created_at: string
           id: string
           image_urls: string[] | null
           is_deleted: boolean
           like_count: number
+          post_type: string
           reply_count: number
           reply_to_id: string | null
           repost_count: number
@@ -545,12 +685,14 @@ export type Database = {
         }
         Insert: {
           author_id: string
+          build_log_data?: Json | null
           content: string
           created_at?: string
           id?: string
           image_urls?: string[] | null
           is_deleted?: boolean
           like_count?: number
+          post_type?: string
           reply_count?: number
           reply_to_id?: string | null
           repost_count?: number
@@ -560,12 +702,14 @@ export type Database = {
         }
         Update: {
           author_id?: string
+          build_log_data?: Json | null
           content?: string
           created_at?: string
           id?: string
           image_urls?: string[] | null
           is_deleted?: boolean
           like_count?: number
+          post_type?: string
           reply_count?: number
           reply_to_id?: string | null
           repost_count?: number
@@ -974,8 +1118,8 @@ export const Constants = {
 // ─── Convenience aliases ────────────────────────────────────────────────────
 // These row types make imports cleaner throughout the app.
 
-export type Profile  = Database['public']['Tables']['profiles']['Row']
-export type Vehicle  = Database['public']['Tables']['vehicles']['Row']
+export type Profile       = Database['public']['Tables']['profiles']['Row']
+export type Vehicle       = Database['public']['Tables']['vehicles']['Row']
 export type PlateLock     = Database['public']['Tables']['plate_locks']['Row']
 export type PlateFollow   = Database['public']['Tables']['plate_follows']['Row']
 export type Post          = Database['public']['Tables']['posts']['Row']
@@ -991,6 +1135,8 @@ export type Listing       = Database['public']['Tables']['listings']['Row']
 export type Notification  = Database['public']['Tables']['notifications']['Row']
 export type Report        = Database['public']['Tables']['reports']['Row']
 export type Block         = Database['public']['Tables']['blocks']['Row']
+export type BuildLog      = Database['public']['Tables']['build_logs']['Row']
+export type BugReport     = Database['public']['Tables']['bug_reports']['Row']
 
 // PostWithAuthor — post joined with author profile and optional vehicle
 export type PostWithAuthor = Post & {

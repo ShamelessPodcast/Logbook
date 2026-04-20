@@ -42,10 +42,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Vehicle not found or not owned by you' }, { status: 403 })
   }
 
-  // Insert build log (build_logs added in migration 006 — cast until types regenerated)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const db = supabase as any
-  const { data: buildLog, error: logError } = await db
+  const { data: buildLog, error: logError } = await supabase
     .from('build_logs')
     .insert({
       author_id: user.id,
@@ -71,16 +68,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: logError.message }, { status: 500 })
   }
 
-  // Also create a feed post for this build log so it appears in the timeline
+  // Also create a feed post so the build log appears in the timeline
   const totalCost = parts_cost_pence + labour_cost_pence
-  const costStr = totalCost > 0
-    ? ` Cost: £${(totalCost / 100).toFixed(2)}.`
-    : ''
+  const costStr = totalCost > 0 ? ` Cost: £${(totalCost / 100).toFixed(2)}.` : ''
   const hoursStr = hours_spent ? ` Time: ${hours_spent}h.` : ''
   const postContent = `🔧 ${title}${description ? `\n\n${description}` : ''}${costStr}${hoursStr}`
 
-  // post_type + build_log_data added in migration 006
-  await db.from('posts').insert({
+  await supabase.from('posts').insert({
     author_id: user.id,
     content: postContent.slice(0, 2000),
     vehicle_id,
@@ -100,9 +94,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'vehicle_id is required' }, { status: 400 })
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const db = supabase as any
-  const { data, error } = await db
+  const { data, error } = await supabase
     .from('build_logs')
     .select('*')
     .eq('vehicle_id', vehicleId)

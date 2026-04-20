@@ -31,8 +31,7 @@ export async function POST(request: Request) {
     })
 
     // Also store in Supabase for tracking
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase as any).from('bug_reports').insert({
+    await supabase.from('bug_reports').insert({
       title,
       description: description || null,
       steps: steps || null,
