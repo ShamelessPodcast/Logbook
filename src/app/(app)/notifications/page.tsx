@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Avatar } from '@/components/ui/Avatar'
 import Link from 'next/link'
 import { timeAgo } from '@/utils/format'
-import { cn } from '@/utils/cn'
+import { cn } from '@/lib/utils'
 import type { Metadata } from 'next'
 import { Bell, Heart, MessageCircle, Repeat2, UserPlus } from 'lucide-react'
 

@@ -9,7 +9,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { cn } from '@/utils/cn'
+import { cn } from '@/lib/utils'
 import toast from 'react-hot-toast'
 
 interface PostCardProps {

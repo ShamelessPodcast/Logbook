@@ -23,8 +23,8 @@ export default async function HomePage() {
       {/* Nav */}
       <nav className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-6 py-4 bg-white/90 backdrop-blur border-b border-gray-100">
         <div className="flex items-center gap-2">
-          <span className="text-2xl font-black tracking-tight text-brand-600">L</span>
-          <span className="text-xl font-bold tracking-tight text-gray-900">ogbook</span>
+          <img src="/l-plate.svg" alt="Logbook" className="h-8 w-8 rounded-sm" />
+          <span className="text-xl font-bold tracking-tight text-gray-900">Logbook</span>
         </div>
         <div className="flex items-center gap-3">
           <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
@@ -187,8 +187,8 @@ export default async function HomePage() {
       <footer className="border-t border-gray-100 py-10 px-6">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-black text-brand-600">L</span>
-            <span className="font-bold text-gray-700">ogbook</span>
+            <img src="/l-plate.svg" alt="Logbook" className="h-6 w-6 rounded-sm" />
+            <span className="font-bold text-gray-700">Logbook</span>
             <span className="text-gray-400 text-sm ml-2">© {new Date().getFullYear()}</span>
           </div>
           <nav className="flex items-center gap-6 text-sm text-gray-500">

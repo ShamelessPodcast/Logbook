@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/utils/cn'
+import { cn } from '@/lib/utils'
 import {
   Bell,
   Car,
@@ -51,10 +51,8 @@ export function Sidebar({ profile, unreadNotifications = 0, unreadMessages = 0 }
         href="/feed"
         className="mb-4 flex items-center gap-2.5 px-3 py-2 group"
       >
-        {/* Logbook wordmark — plate-style L */}
-        <span className="flex h-8 w-8 items-center justify-center rounded-md bg-brand-600 text-white font-black text-lg leading-none select-none group-hover:bg-brand-700 transition-colors">
-          L
-        </span>
+        {/* L-plate logo */}
+        <img src="/l-plate.svg" alt="Logbook" className="h-8 w-8 rounded-sm select-none" />
         <span className="text-[1.25rem] font-black tracking-tight text-[--ink]">
           Logbook
         </span>

@@ -5,8 +5,9 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen bg-white">
       <nav className="border-b border-gray-100 px-6 py-4">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-1 font-bold text-gray-900">
-            <span className="font-black text-brand-600">L</span>ogbook
+          <Link href="/" className="flex items-center gap-2 font-bold text-gray-900">
+            <img src="/l-plate.svg" alt="Logbook" className="h-6 w-6 rounded-sm" />
+            Logbook
           </Link>
           <div className="flex gap-4 text-sm text-gray-500">
             <Link href="/legal/privacy" className="hover:text-gray-900 transition-colors">Privacy</Link>

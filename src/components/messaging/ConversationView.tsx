@@ -7,7 +7,7 @@ import { useRealtime } from '@/hooks/useRealtime'
 import { timeAgo } from '@/utils/format'
 import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { cn } from '@/utils/cn'
+import { cn } from '@/lib/utils'
 import { Send } from 'lucide-react'
 
 interface Message {
