@@ -6,8 +6,15 @@ import { UKPlate } from '@/components/ui/UKPlate'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile, Vehicle } from '@/types/database'
 import { ImagePlus, X } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
+
+const REV_PROMPTS = [
+  'Show us some bad driving? 😬',
+  'What was your first car and how did it make you feel?',
+  'Show us your motor? 🚗',
+  "What's happening, car lover?",
+]
 
 interface PostComposerProps {
   profile: Profile
@@ -29,8 +36,18 @@ export function PostComposer({
   const [images, setImages] = useState<File[]>([])
   const [imagePreviews, setImagePreviews] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
+  const [promptIndex, setPromptIndex] = useState(() => Math.floor(Math.random() * REV_PROMPTS.length))
   const fileRef = useRef<HTMLInputElement>(null)
   const supabase = createClient()
+
+  // Rotate placeholder every 4 seconds when composer is empty
+  useEffect(() => {
+    if (content.length > 0) return
+    const t = setInterval(() => {
+      setPromptIndex(i => (i + 1) % REV_PROMPTS.length)
+    }, 4000)
+    return () => clearInterval(t)
+  }, [content])
 
   function addFiles(files: File[]) {
     const allowed = files.filter(f => f.type.startsWith('image/')).slice(0, 4 - images.length)
@@ -121,9 +138,9 @@ export function PostComposer({
             value={content}
             onChange={(e) => setContent(e.target.value)}
             onPaste={handlePaste}
-            placeholder={placeholder}
+            placeholder={placeholder ?? REV_PROMPTS[promptIndex]}
             rows={3}
-            className="w-full resize-none bg-transparent text-[15px] placeholder:text-neutral-400 focus:outline-none"
+            className="w-full resize-none bg-transparent text-[15px] placeholder:text-neutral-400 focus:outline-none transition-all"
             maxLength={MAX + 50}
           />
 
