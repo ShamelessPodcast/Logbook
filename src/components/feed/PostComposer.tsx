@@ -6,7 +6,7 @@ import { UKPlate } from '@/components/ui/UKPlate'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile, Vehicle } from '@/types/database'
 import { ImagePlus, X } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 
 const REV_PROMPTS = [
@@ -24,6 +24,21 @@ interface PostComposerProps {
   placeholder?: string
 }
 
+// Read a File as a base64 data URL
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
+}
+
+// Normalise registration for use as a hashtag
+function regToHashtag(reg: string): string {
+  return '#' + reg.replace(/[^A-Z0-9]/gi, '').toUpperCase()
+}
+
 export function PostComposer({
   profile,
   vehicles = [],
@@ -37,6 +52,12 @@ export function PostComposer({
   const [imagePreviews, setImagePreviews] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [promptIndex, setPromptIndex] = useState(() => Math.floor(Math.random() * REV_PROMPTS.length))
+
+  // Plate detection state
+  const [detectedPlates, setDetectedPlates] = useState<string[]>([])
+  const [dismissedPlates, setDismissedPlates] = useState<Set<string>>(new Set())
+  const [detecting, setDetecting] = useState(false)
+
   const fileRef = useRef<HTMLInputElement>(null)
   const supabase = createClient()
 
@@ -49,12 +70,53 @@ export function PostComposer({
     return () => clearInterval(t)
   }, [content])
 
+  // Plates already added to content as hashtags
+  const addedHashtags = new Set(
+    (content.match(/#([A-Z0-9]{2,8})\b/gi) ?? []).map(h => h.slice(1).toUpperCase())
+  )
+
+  // Visible suggestions: detected but not dismissed and not already in content
+  const suggestions = detectedPlates.filter(
+    p => !dismissedPlates.has(p) && !addedHashtags.has(p)
+  )
+
+  const detectPlatesFromFile = useCallback(async (file: File) => {
+    setDetecting(true)
+    try {
+      const dataUrl = await fileToDataUrl(file)
+      const res = await fetch('/api/detect-plate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: dataUrl }),
+      })
+      if (!res.ok) return
+      const { plates } = await res.json() as { plates: string[] }
+      if (plates?.length > 0) {
+        setDetectedPlates(prev => {
+          const next = [...prev]
+          for (const p of plates) {
+            if (!next.includes(p)) next.push(p)
+          }
+          return next
+        })
+      }
+    } catch {
+      // silent — detection is best-effort
+    } finally {
+      setDetecting(false)
+    }
+  }, [])
+
   function addFiles(files: File[]) {
     const allowed = files.filter(f => f.type.startsWith('image/')).slice(0, 4 - images.length)
     if (!allowed.length) return
     const previews = allowed.map(f => URL.createObjectURL(f))
     setImages(prev => [...prev, ...allowed])
     setImagePreviews(prev => [...prev, ...previews])
+    // Kick off plate detection on each new image
+    for (const f of allowed) {
+      detectPlatesFromFile(f)
+    }
   }
 
   function handlePaste(e: React.ClipboardEvent<HTMLTextAreaElement>) {
@@ -80,6 +142,18 @@ export function PostComposer({
     setImagePreviews((prev) => prev.filter((_, i) => i !== idx))
   }
 
+  function acceptPlate(plate: string) {
+    const tag = regToHashtag(plate)
+    setContent(prev => {
+      const trimmed = prev.trimEnd()
+      return trimmed ? `${trimmed} ${tag}` : tag
+    })
+  }
+
+  function dismissPlate(plate: string) {
+    setDismissedPlates(prev => new Set(Array.from(prev).concat(plate)))
+  }
+
   async function handleSubmit() {
     if (!canPost) return
     setLoading(true)
@@ -87,7 +161,7 @@ export function PostComposer({
     try {
       const imageUrls: string[] = []
 
-      // Upload images
+      // Upload images to Supabase Storage
       for (const file of images) {
         const ext = file.name.split('.').pop()
         const path = `${profile.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
@@ -100,20 +174,29 @@ export function PostComposer({
         imageUrls.push(data.publicUrl)
       }
 
-      const { error } = await supabase.from('posts').insert({
-        author_id: profile.id,
-        content: content.trim(),
-        vehicle_id: selectedVehicleId,
-        reply_to_id: replyToId ?? null,
-        image_urls: imageUrls.length > 0 ? imageUrls : null,
+      // Use the posts API route so plate-mention notifications are dispatched
+      const res = await fetch('/api/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: content.trim(),
+          vehicle_id: selectedVehicleId,
+          reply_to_id: replyToId ?? null,
+          image_urls: imageUrls.length > 0 ? imageUrls : null,
+        }),
       })
 
-      if (error) throw error
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body?.error ?? 'Failed to post')
+      }
 
       setContent('')
       setSelectedVehicleId(null)
       setImages([])
       setImagePreviews([])
+      setDetectedPlates([])
+      setDismissedPlates(new Set())
       onPost?.()
     } catch (err) {
       toast.error('Could not post. Try again.')
@@ -146,7 +229,7 @@ export function PostComposer({
 
           {/* Image previews */}
           {imagePreviews.length > 0 && (
-            <div className="mb-2 flex gap-2">
+            <div className="mb-2 flex gap-2 flex-wrap">
               {imagePreviews.map((src, i) => (
                 <div key={i} className="relative h-20 w-20 overflow-hidden rounded-lg">
                   <img src={src} alt="" className="h-full w-full object-cover" />
@@ -158,6 +241,44 @@ export function PostComposer({
                   </button>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* Plate detection suggestions */}
+          {(detecting || suggestions.length > 0) && (
+            <div className="mb-2">
+              {detecting && (
+                <p className="text-xs text-neutral-400 mb-1 animate-pulse">
+                  🔍 Reading plates…
+                </p>
+              )}
+              {suggestions.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {suggestions.map((plate) => (
+                    <div
+                      key={plate}
+                      className="flex items-center gap-1.5 rounded-full border border-amber-300 bg-amber-50 px-2 py-1"
+                    >
+                      <span className="text-xs text-amber-700 font-medium">Plate detected:</span>
+                      <UKPlate registration={plate} size="sm" />
+                      <button
+                        onClick={() => acceptPlate(plate)}
+                        className="ml-0.5 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white hover:bg-amber-600 transition-colors"
+                        title={`Add ${regToHashtag(plate)} to post`}
+                      >
+                        + Add
+                      </button>
+                      <button
+                        onClick={() => dismissPlate(plate)}
+                        className="rounded-full p-0.5 text-amber-400 hover:text-amber-700 transition-colors"
+                        title="Dismiss"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
