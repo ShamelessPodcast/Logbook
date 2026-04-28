@@ -58,7 +58,7 @@ export default async function HomePage() {
           </h1>
 
           <p className="text-lg sm:text-xl text-gray-500 max-w-xl mx-auto mb-10 leading-relaxed">
-            The social network built for UK car owners. Share your builds, track your MOT history, and connect with thousands of enthusiasts who get it.
+            The social network built for UK car owners. Share your passions, build your garage, and connect with thousands of enthusiasts who get it.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
