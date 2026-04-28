@@ -1,13 +1,13 @@
 # Logbook — Build Progress
 
-Last updated: 2026-04-15
+Last updated: 2026-04-28
 
 ## Status Summary
 
 | Section | Tasks | Done | Blocked |
 |---------|-------|------|---------|
 | 1. Project bootstrap | 1–5 | ✅ 5/5 | 0 |
-| 2. Accounts & infra | 6–8 | ⏳ 0/3 | 3 |
+| 2. Accounts & infra | 6–8 | ✅ 3/3 | 0 |
 | 3. Database | 9–16 | ✅ 8/8 | 0 |
 | 4. Auth | 17–24 | ✅ 8/8 | 0 |
 | 5. UK plate utils | 25–28 | ✅ 4/4 | 0 |
@@ -24,7 +24,19 @@ Last updated: 2026-04-15
 | 16. Notifications & Search | 91–95 | ✅ 5/5 | 0 |
 | 17. Edge Functions & Email | 96–100 | ✅ 5/5 | 0 |
 
-**Total: 93/100 done, 3 blocked, 4 pending infra**
+**Total: 100/100 done. Infrastructure fully live.**
+
+---
+
+## Live Infrastructure
+
+| Service | Value |
+|---------|-------|
+| **Live URL** | https://logbook-sable-one.vercel.app |
+| **GitHub** | https://github.com/ShamelessPodcast/Logbook (private) |
+| **Supabase project** | `euduwyhbahrxsaytfzki` — https://supabase.com/dashboard/project/euduwyhbahrxsaytfzki |
+| **Vercel project** | https://vercel.com/shamelesspodcasts-projects/logbook |
+| **Supabase region** | West EU (Ireland) |
 
 ---
 
@@ -38,9 +50,9 @@ Last updated: 2026-04-15
 - [x] 5. `src/app/globals.css` — scrollbar, feed-item utility
 
 ### Section 2 — Accounts & Infrastructure
-- [ ] 6. **BLOCKED** — Supabase project creation (need dashboard access; fill `.env.local`)
-- [ ] 7. **BLOCKED** — Vercel project creation (blocked by Task 6)
-- [ ] 8. **BLOCKED** — GitHub repo push (need PAT for SUPAUniverse account or `gh auth login`)
+- [x] 6. Supabase project created (`euduwyhbahrxsaytfzki`, EU region). All 7 migrations applied. 5 storage buckets live.
+- [x] 7. Vercel project connected to GitHub repo. All env vars set for Production, Preview, Development.
+- [x] 8. GitHub repo at `ShamelessPodcast/Logbook` (private). SSH key `id_ed25519_supa` / `github-shameless` host alias.
 
 ### Section 3 — Database Schema
 - [x] 9. `supabase/migrations/001_initial_schema.sql` — 17 tables
@@ -74,7 +86,7 @@ Last updated: 2026-04-15
 - [x] 31. DVLA data mapped to vehicle fields (MOT/tax dates, make/model/colour)
 
 ### Section 7 — Feed
-- [x] 32. `src/components/feed/PostComposer.tsx` — text, images, vehicle selector
+- [x] 32. `src/components/feed/PostComposer.tsx` — text, images, vehicle selector, plate detection
 - [x] 33. `src/components/feed/PostCard.tsx` — full post card with actions
 - [x] 34. `src/components/feed/FeedList.tsx` — infinite scroll, PAGE_SIZE=20
 - [x] 35. `src/components/feed/FollowButton.tsx` — optimistic follow/unfollow
@@ -84,7 +96,7 @@ Last updated: 2026-04-15
 - [x] 39. `src/app/(app)/layout.tsx` — app shell with sidebar
 - [x] 40. `src/components/layout/Sidebar.tsx`
 - [x] 41. `src/components/layout/MobileTabBar.tsx`
-- [x] 42. `src/components/layout/RightSidebar.tsx`
+- [x] 42. `src/components/layout/RightSidebar.tsx` — live SearchBar
 - [x] 43. `src/hooks/useInfiniteScroll.ts`
 
 ### Section 8 — Profiles
@@ -166,20 +178,14 @@ Last updated: 2026-04-15
 
 ---
 
-## Blockers
+## Remaining Manual Steps
 
-| # | Blocker | Resolution |
-|---|---------|------------|
-| B1 | Supabase project not created — `.env.local` has empty values | Go to supabase.com, create project, copy URL + keys into `.env.local`, run `supabase db push` |
-| B2 | GitHub repo not pushed — need PAT for SUPAUniverse account | Run `~/bin/gh auth login` with SUPAUniverse PAT, then `~/bin/gh repo create SUPAUniverse/logbook --private --source=. --push` |
-| B3 | Vercel project not created | Connect GitHub repo at vercel.com, add env vars, deploy |
-
-## Post-Infra Tasks
-
-After Supabase is connected:
-- [ ] Run `npx supabase gen types typescript --project-id <id> > src/types/database.ts` to replace hand-written types
-- [ ] Set `typescript: { ignoreBuildErrors: false }` and `eslint: { ignoreDuringBuilds: false }` in `next.config.mjs`
-- [ ] Register Stripe webhook endpoint: `https://<domain>/api/stripe/webhook` → event: `checkout.session.completed`
-- [ ] Apply DVLA API key at developer.driver-vehicle-licensing.api.gov.uk
-- [ ] Deploy Edge Functions: `supabase functions deploy mot-reminder && supabase functions deploy tax-reminder`
-- [ ] Schedule Edge Functions via Supabase cron or pg_cron
+| # | Item | Where |
+|---|------|--------|
+| M1 | Stripe keys (publishable + secret + webhook secret + price ID) | Stripe dashboard → Vercel env vars |
+| M2 | Register Stripe webhook: `https://logbook-sable-one.vercel.app/api/stripe/webhook` → `checkout.session.completed` | Stripe dashboard |
+| M3 | Resend API key | resend.com → Vercel `RESEND_API_KEY` |
+| M4 | DVLA API key (vehicle lookup) | developer-portal.driver-vehicle-licensing.api.gov.uk |
+| M5 | DVSA MOT History API key (free, up to 5 days) | documentation.history.mot.api.gov.uk |
+| M6 | Deploy Edge Functions: `supabase functions deploy mot-reminder tax-reminder` | Terminal (after installing Supabase CLI) |
+| M7 | Custom domain | Vercel → Domains |
