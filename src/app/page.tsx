@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { LogbookLogo } from '@/components/ui/LogbookLogo'
 
 export const metadata: Metadata = {
   title: 'Logbook — The social network for UK car owners',
@@ -22,10 +23,7 @@ export default async function HomePage() {
     <div className="min-h-screen bg-white">
       {/* Nav */}
       <nav className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-6 py-4 bg-white/90 backdrop-blur border-b border-gray-100">
-        <div className="flex items-center gap-2">
-          <img src="/l-plate.svg" alt="Logbook" className="h-8 w-8 rounded-sm" />
-          <span className="text-xl font-bold tracking-tight text-gray-900">Logbook</span>
-        </div>
+        <LogbookLogo size="md" />
         <div className="flex items-center gap-3">
           <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
             Log in
@@ -186,10 +184,9 @@ export default async function HomePage() {
       {/* Footer */}
       <footer className="border-t border-gray-100 py-10 px-6">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <img src="/l-plate.svg" alt="Logbook" className="h-6 w-6 rounded-sm" />
-            <span className="font-bold text-gray-700">Logbook</span>
-            <span className="text-gray-400 text-sm ml-2">© {new Date().getFullYear()}</span>
+          <div className="flex items-center gap-3">
+            <LogbookLogo size="sm" />
+            <span className="text-gray-400 text-sm">© {new Date().getFullYear()}</span>
           </div>
           <nav className="flex items-center gap-6 text-sm text-gray-500">
             <Link href="/legal/privacy" className="hover:text-gray-900 transition-colors">Privacy</Link>

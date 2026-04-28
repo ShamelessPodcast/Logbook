@@ -15,6 +15,7 @@ import {
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Avatar } from '@/components/ui/Avatar'
+import { LogbookLogo } from '@/components/ui/LogbookLogo'
 import type { Profile } from '@/types/database'
 import { signOut } from '@/app/auth/actions'
 
@@ -47,16 +48,9 @@ export function Sidebar({ profile, unreadNotifications = 0, unreadMessages = 0 }
   return (
     <aside className="sticky top-0 flex h-screen w-64 flex-col border-r border-[--border] bg-white px-3 py-4">
       {/* Logo */}
-      <Link
-        href="/feed"
-        className="mb-4 flex items-center gap-2.5 px-3 py-2 group"
-      >
-        {/* L-plate logo */}
-        <img src="/l-plate.svg" alt="Logbook" className="h-8 w-8 rounded-sm select-none" />
-        <span className="text-[1.25rem] font-black tracking-tight text-[--ink]">
-          Logbook
-        </span>
-      </Link>
+      <div className="mb-4 px-3 py-2">
+        <LogbookLogo href="/feed" size="md" />
+      </div>
 
       {/* Nav */}
       <nav className="flex flex-1 flex-col gap-0.5">

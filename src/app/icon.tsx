@@ -10,26 +10,37 @@ export default function Icon() {
         style={{
           width: 32,
           height: 32,
-          background: '#DC2626',
+          background: 'white',
+          borderRadius: 6,
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: 4,
+          position: 'relative',
+          border: '1px solid #D1D5DB',
         }}
       >
-        <span
+        {/* Vertical bar of L */}
+        <div
           style={{
-            color: 'white',
-            fontSize: 22,
-            fontWeight: 900,
-            fontFamily: 'serif',
-            lineHeight: 1,
-            marginTop: 2,
-            letterSpacing: '-0.02em',
+            position: 'absolute',
+            left: 5,
+            top: 3,
+            width: 9,
+            height: 26,
+            background: '#DC2626',
+            borderRadius: 1,
           }}
-        >
-          L
-        </span>
+        />
+        {/* Horizontal bar of L */}
+        <div
+          style={{
+            position: 'absolute',
+            left: 5,
+            bottom: 3,
+            width: 22,
+            height: 7,
+            background: '#DC2626',
+            borderRadius: 1,
+          }}
+        />
       </div>
     ),
     { ...size }

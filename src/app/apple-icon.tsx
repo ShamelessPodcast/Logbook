@@ -10,26 +10,37 @@ export default function AppleIcon() {
         style={{
           width: 180,
           height: 180,
-          background: '#DC2626',
+          background: 'white',
+          borderRadius: 36,
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: 22,
+          position: 'relative',
+          border: '2px solid #D1D5DB',
         }}
       >
-        <span
+        {/* Vertical bar of L */}
+        <div
           style={{
-            color: 'white',
-            fontSize: 124,
-            fontWeight: 900,
-            fontFamily: 'serif',
-            lineHeight: 1,
-            marginTop: 10,
-            letterSpacing: '-0.02em',
+            position: 'absolute',
+            left: 30,
+            top: 18,
+            width: 50,
+            height: 145,
+            background: '#DC2626',
+            borderRadius: 4,
           }}
-        >
-          L
-        </span>
+        />
+        {/* Horizontal bar of L */}
+        <div
+          style={{
+            position: 'absolute',
+            left: 30,
+            bottom: 18,
+            width: 125,
+            height: 42,
+            background: '#DC2626',
+            borderRadius: 4,
+          }}
+        />
       </div>
     ),
     { ...size }
