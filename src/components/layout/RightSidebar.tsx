@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { UKPlate } from '@/components/ui/UKPlate'
+import { SearchBar } from '@/components/layout/SearchBar'
 
 export async function RightSidebar() {
   const supabase = await createClient()
@@ -22,14 +23,7 @@ export async function RightSidebar() {
   return (
     <aside className="sticky top-0 hidden h-screen w-80 flex-col gap-6 overflow-y-auto py-4 pl-6 xl:flex">
       {/* Search */}
-      <div>
-        <Link
-          href="/search"
-          className="flex h-10 w-full items-center gap-2 rounded-full border border-neutral-200 bg-neutral-50 px-4 text-sm text-neutral-400 transition-colors hover:border-neutral-300 hover:bg-white"
-        >
-          Search Logbook…
-        </Link>
-      </div>
+      <SearchBar />
 
       {/* Trending plates */}
       {trending && trending.length > 0 && (

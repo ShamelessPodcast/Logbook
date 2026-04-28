@@ -20,7 +20,7 @@ const signInSchema = z.object({
   password: z.string().min(1, 'Password is required'),
 })
 
-export async function signUp(formData: FormData): Promise<{ error?: string }> {
+export async function signUp(formData: FormData): Promise<{ error?: string; success?: boolean; email?: string }> {
   const raw = {
     email: formData.get('email'),
     password: formData.get('password'),
@@ -57,7 +57,7 @@ export async function signUp(formData: FormData): Promise<{ error?: string }> {
 
   if (error) return { error: error.message }
 
-  redirect('/onboarding')
+  return { success: true, email }
 }
 
 export async function signIn(formData: FormData): Promise<{ error?: string }> {
