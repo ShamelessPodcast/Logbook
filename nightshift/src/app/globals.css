@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-ink-950 text-ink-100 antialiased;
+}
+
+/* The dashboard is read once a day, half awake. Everything here is in
+   service of "what needs me?" being answerable in about four seconds. */
+
+@layer components {
+  .panel {
+    @apply rounded-lg border border-ink-800 bg-ink-900;
+  }
+
+  .panel-head {
+    @apply flex items-center justify-between gap-3 border-b border-ink-800 px-4 py-3;
+  }
+
+  .panel-title {
+    @apply text-xs font-semibold uppercase tracking-widest text-ink-400;
+  }
+
+  .btn {
+    @apply inline-flex items-center gap-1.5 rounded-md border border-ink-700 bg-ink-800 px-3 py-1.5
+           text-sm font-medium text-ink-100 transition hover:border-ink-600 hover:bg-ink-700
+           disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply border-transparent bg-ink-100 text-ink-950 hover:bg-white;
+  }
+
+  .btn-quiet {
+    @apply border-transparent bg-transparent text-ink-400 hover:bg-ink-800 hover:text-ink-100;
+  }
+
+  .field {
+    @apply w-full rounded-md border border-ink-700 bg-ink-950 px-3 py-2 text-sm text-ink-100
+           placeholder:text-ink-500 focus:border-ink-500 focus:outline-none;
+  }
+
+  .label {
+    @apply mb-1.5 block text-xs font-medium uppercase tracking-wider text-ink-400;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium;
+  }
+
+  .prose-brief {
+    @apply text-[15px] leading-relaxed text-ink-200;
+  }
+
+  .prose-brief h2 {
+    @apply mb-2 mt-6 text-xs font-semibold uppercase tracking-widest text-ink-400;
+  }
+
+  .prose-brief h3 {
+    @apply mb-1 mt-4 text-sm font-semibold text-ink-100;
+  }
+
+  .prose-brief p {
+    @apply mb-3;
+  }
+
+  .prose-brief ul {
+    @apply mb-3 space-y-1.5 pl-1;
+  }
+
+  .prose-brief li {
+    @apply relative pl-4 before:absolute before:left-0 before:text-ink-500 before:content-['—'];
+  }
+
+  .prose-brief strong {
+    @apply font-semibold text-ink-100;
+  }
+
+  .prose-brief code {
+    @apply rounded bg-ink-800 px-1 py-0.5 font-mono text-[13px] text-ink-200;
+  }
+
+  .prose-brief em {
+    @apply text-ink-300;
+  }
+}
